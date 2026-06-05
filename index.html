@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog académico – Depresión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:          #eaf2f7;
+      --bg-alt:      #d8e7f1;
+      --card:        #ffffff;
+      --text:        #12293b;
+      --muted:       #4f6f8a;
+      --primary:     #3b6b94;
+      --primary-dark:#1b4762;
+      --accent:      #5b8fbf;
+      --accent-soft: rgba(91, 143, 191, 0.14);
+      --secondary:   #2c5f86;
+      --line:        rgba(49,90,123,0.14);
+      --soft:        rgba(49,90,123,0.06);
+      --shadow:      0 12px 30px rgba(49,90,123,0.12);
+      --shadow-lg:   0 24px 56px rgba(49,90,123,0.16);
+      --radius:      16px;
+      --radius-lg:   24px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+
+    body{
+      font-family:'DM Sans',system-ui,sans-serif;
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.7;
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{color:inherit;text-decoration:none;}
+
+    #progress-bar{
+      position:fixed;top:0;left:0;z-index:100;
+      height:3px;width:0%;
+      background:linear-gradient(90deg,var(--accent),var(--primary));
+      transition:width .1s linear;
+      border-radius:0 3px 3px 0;
+    }
+
+    .container{
+      width:min(1160px,calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    header{padding:36px 0 20px;}
+
+    .hero{
+      position:relative;
+      border-radius:16px;
+      padding:44px 44px 38px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.14);
+      box-shadow:var(--shadow-lg);
+      background:linear-gradient(135deg,#1f4b72,#163e5d);
+      color:#f4f9ff;
+    }
+
+    .hero-bg{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse 60% 80% at 90% 20%,rgba(91,143,191,.42),transparent),
+        radial-gradient(ellipse 50% 60% at 15% 80%,rgba(120,179,217,.28),transparent);
+      pointer-events:none;
+    }
+
+    .video-overlay{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;
+      justify-content:flex-end;
+      padding:20px;
+      background:linear-gradient(180deg,rgba(20,53,82,.16) 0%,rgba(8,24,40,.94) 100%);
+      color:#fff;
+      pointer-events:none;
+    }
+
+    .hero-grain{
+      position:absolute;inset:0;
+      opacity:.035;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events:none;
+    }
+
+    .hero-content{position:relative;z-index:1;}
+
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.2);
+      color:#fde68a;
+      padding:7px 14px;border-radius:999px;
+      font-size:.85rem;font-weight:700;letter-spacing:.04em;
+      margin-bottom:18px;
+      backdrop-filter:blur(8px);
+    }
+
+    .hero h1{
+      font-family:'Playfair Display',Georgia,serif;
+      font-size:clamp(2rem,5vw,3.2rem);
+      line-height:1.05;
+      letter-spacing:-.5px;
+      color:#fff;
+      max-width:860px;
+      margin-bottom:16px;
+    }
+
+    .hero h1 em{
+      font-style:normal;
+      color:#a8d4f0;
+    }
+
+    .subtitle{
+      max-width:780px;
+      color:rgba(255,255,255,.78);
+      font-size:1.05rem;
+    }
+
+    .hero-chips{
+      display:flex;flex-wrap:wrap;gap:10px;
+      margin-top:22px;
+    }
+
+    .hero-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.14);
+      color:#fde68a;
+      padding:7px 13px;border-radius:999px;
+      font-size:.82rem;font-weight:700;
+      backdrop-filter:blur(6px);
+    }
+
+    .hero-chip svg{width:14px;height:14px;fill:currentColor;}
+
+    nav{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,252,245,.94);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+      box-shadow:0 1px 0 var(--line);
+      margin-bottom:28px;
+    }
+
+    .nav-inner{
+      display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+      width:min(1160px,calc(100% - 28px));
+      margin:0 auto;
+      padding:11px 0;
+    }
+
+    .nav-link{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:9px 15px;border-radius:999px;
+      background:rgba(28,15,2,.04);
+      color:var(--muted);
+      font-weight:700;font-size:.88rem;
+      border:1px solid transparent;
+      transition:all .2s ease;
+      white-space:nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link.active{
+      background:var(--accent);
+      color:#fff;
+      transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(59,107,148,.22);
+    }
+
+    .nav-num{
+      width:20px;height:20px;border-radius:50%;
+      background:rgba(91,143,191,.14);
+      color:var(--primary);
+      display:grid;place-items:center;
+      font-size:.72rem;font-weight:900;
+      transition:background .2s,color .2s;
+    }
+
+    .nav-link:hover .nav-num,
+    .nav-link.active .nav-num{background:rgba(255,255,255,.22);color:#fff;}
+
+    section.card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+      margin-bottom:28px;
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity .55s ease, transform .55s ease;
+    }
+
+    section.card.visible{opacity:1;transform:none;}
+
+    .section-top{
+      display:flex;flex-wrap:wrap;
+      justify-content:space-between;
+      gap:16px;align-items:flex-start;
+      margin-bottom:22px;
+      padding-bottom:18px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .section-top h2{
+      margin:0 0 6px;
+      font-family:'Playfair Display',Georgia,serif;
+      font-size:clamp(1.4rem,3vw,2rem);
+      line-height:1.15;
+      color:var(--text);
+    }
+
+    .description{color:var(--muted);margin:0;}
+
+    .num{
+      flex:0 0 auto;
+      width:48px;height:48px;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--accent),var(--primary-dark));
+      color:#fff;
+      display:grid;place-items:center;
+      font-weight:900;font-size:1.1rem;
+      box-shadow:0 8px 20px rgba(59,107,148,.22);
+    }
+
+    .grid-two{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:20px;
+    }
+
+    .grid-equal{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    .panel{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .panel-inner{padding:20px;}
+
+    .panel h3{
+      margin:0 0 12px;
+      font-size:1.1rem;
+      color:var(--primary);
+      font-weight:800;
+    }
+
+    .meta-list{padding-left:20px;color:var(--muted);}
+    .meta-list li+li{margin-top:8px;}
+
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:5px 12px;border-radius:999px;
+      background:var(--accent-soft);
+      border:1px solid rgba(59,107,148,.14);
+      color:var(--primary-dark);
+      font-size:.8rem;font-weight:700;
+    }
+
+    .note{
+      padding:12px 16px;
+      border-radius:10px;
+      background:var(--accent-soft);
+      border-left:3px solid var(--accent);
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:11px 18px;border-radius:999px;
+      font-weight:800;font-size:.9rem;
+      border:2px solid transparent;
+      transition:all .2s ease;
+      cursor:pointer;
+    }
+
+    .btn:hover{transform:translateY(-2px);}
+
+    .btn.primary{
+      background:linear-gradient(135deg,var(--accent),var(--primary));
+      color:#fff;
+      box-shadow:0 12px 28px rgba(59,107,148,.28);
+    }
+
+    .btn.primary:hover{box-shadow:0 16px 36px rgba(59,107,148,.36);}
+
+    .btn.outline{
+      background:transparent;
+      border-color:var(--line);
+      color:var(--muted);
+    }
+
+    .btn.outline:hover{border-color:var(--accent);color:var(--primary);}
+
+    .video-frame{
+      position:relative;
+      aspect-ratio:16/9;
+      overflow:hidden;
+      border-radius:var(--radius-lg);
+      background:#0f0700;
+      border:1px solid rgba(255,255,255,.05);
+      box-shadow:var(--shadow);
+    }
+
+    .video-frame.vertical{aspect-ratio:9/16;}
+
+    .video-frame img{
+      width:100%;height:100%;
+      object-fit:cover;display:block;
+    }
+
+    .video-overlay{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;
+      justify-content:flex-end;
+      padding:20px;
+      background:linear-gradient(180deg,rgba(10,30,55,.14) 0%,rgba(6,20,38,.94) 100%);
+      color:#fff;
+      pointer-events:none;
+    }
+
+    .video-overlay > * { pointer-events:auto; }
+
+    .video-tag{
+      display:inline-flex;align-items:center;gap:7px;
+      width:fit-content;
+      margin-bottom:10px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.2);
+      font-weight:700;font-size:.78rem;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .video-overlay h3{
+      margin:0 0 8px;
+      font-family:'Playfair Display',Georgia,serif;
+      font-size:clamp(1.1rem,2.2vw,1.7rem);
+      line-height:1.1;
+    }
+
+    .video-overlay p{
+      margin:0 0 14px;
+      color:rgba(255,255,255,.82);
+      font-size:.9rem;
+      max-width:500px;
+    }
+
+    .play-pill{
+      display:inline-flex;align-items:center;gap:10px;
+      background:linear-gradient(135deg,#5b8fbf,#3b6b94);
+      color:#fff;border-radius:999px;
+      padding:10px 18px;font-weight:800;
+      width:fit-content;
+      box-shadow:0 10px 24px rgba(59,107,148,.3);
+      transition:all .2s ease;
+      pointer-events:auto;
+    }
+
+    .play-pill:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(59,107,148,.4);}
+
+    .play{
+      width:30px;height:30px;border-radius:50%;
+      background:rgba(255,255,255,.22);
+      display:grid;place-items:center;
+      flex-shrink:0;
+    }
+
+    .triangle{
+      width:0;height:0;
+      border-top:7px solid transparent;
+      border-bottom:7px solid transparent;
+      border-left:12px solid #fff;
+      margin-left:2px;
+    }
+
+    .team-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .team-card{
+      background:var(--accent-soft);
+      border:1px solid rgba(91,143,191,.14);
+      border-radius:14px;
+      padding:16px;
+      display:flex;flex-direction:column;gap:6px;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+
+    .team-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 12px 28px rgba(59,107,148,.14);
+    }
+
+    .team-avatar{
+      width:44px;height:44px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--primary-dark));
+      display:grid;place-items:center;
+      color:#fff;font-weight:900;font-size:1rem;
+      margin-bottom:2px;
+    }
+
+    .team-name{
+      font-weight:800;font-size:.88rem;
+      color:var(--text);
+      line-height:1.2;
+    }
+
+    .team-role{font-size:.78rem;color:var(--muted);}
+
+    .stats-row{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:14px;
+      margin-top:20px;
+    }
+
+    .stat-block{
+      background:var(--accent-soft);
+      border:1px solid rgba(59,107,148,.12);
+      border-radius:14px;
+      padding:18px;
+      text-align:center;
+    }
+
+    .stat-num{
+      font-family:'Playfair Display',Georgia,serif;
+      font-size:2.4rem;
+      font-weight:900;
+      color:var(--primary);
+      line-height:1;
+      display:block;
+    }
+
+    .stat-label{
+      font-size:.8rem;
+      font-weight:700;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      margin-top:4px;
+    }
+
+    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+
+    .tab-btn{
+      padding:8px 16px;border-radius:999px;
+      background:rgba(28,15,2,.05);
+      border:1px solid transparent;
+      color:var(--muted);font-weight:700;font-size:.86rem;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+
+    .tab-btn:hover{background:rgba(59,107,148,.1);color:var(--primary);}
+    .tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 6px 16px rgba(59,107,148,.22);}
+
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+
+    .key-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;}
+
+    .key-list li{
+      display:flex;align-items:flex-start;gap:12px;
+      padding:12px 14px;
+      border-radius:10px;
+      background:rgba(28,15,2,.03);
+      border:1px solid var(--line);
+    }
+
+    .key-icon{
+      flex-shrink:0;
+      width:32px;height:32px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--primary));
+      display:grid;place-items:center;
+      color:#fff;font-size:.78rem;font-weight:900;
+      margin-top:2px;
+    }
+
+    .timeline{display:flex;flex-direction:column;gap:0;}
+
+    .tl-item{
+      display:flex;gap:16px;
+      position:relative;
+    }
+
+    .tl-item:not(:last-child) .tl-dot::after{
+      content:'';
+      position:absolute;
+      top:32px;left:15px;
+      width:2px;
+      height:calc(100% + 0px);
+      background:var(--line);
+    }
+
+    .tl-dot{
+      flex-shrink:0;
+      width:32px;height:32px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--primary));
+      display:grid;place-items:center;
+      color:#fff;font-weight:900;font-size:.8rem;
+      position:relative;
+      z-index:1;
+      margin-top:4px;
+    }
+
+    .tl-body{
+      padding-bottom:20px;
+      flex:1;
+    }
+
+    .tl-title{font-weight:800;color:var(--text);margin-bottom:4px;}
+    .tl-text{color:var(--muted);font-size:.92rem;}
+
+    .accordion{display:flex;flex-direction:column;gap:10px;}
+
+    .acc-item{
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+    }
+
+    .acc-btn{
+      width:100%;display:flex;justify-content:space-between;align-items:center;
+      padding:14px 16px;
+      background:#fff;
+      border:none;cursor:pointer;
+      font-family:'DM Sans',sans-serif;
+      font-size:.95rem;font-weight:700;
+      color:var(--text);
+      text-align:left;
+      transition:background .2s;
+    }
+
+    .acc-btn:hover{background:rgba(59,107,148,.05);}
+    .acc-btn.open{color:var(--primary);}
+
+    .acc-arrow{
+      width:22px;height:22px;border-radius:50%;
+      background:var(--accent-soft);
+      display:grid;place-items:center;
+      flex-shrink:0;
+      transition:transform .25s ease;
+      font-size:.7rem;
+      color:var(--primary);
+    }
+
+    .acc-btn.open .acc-arrow{transform:rotate(180deg);}
+
+    .acc-body{
+      display:none;
+      padding:0 16px 16px;
+      color:var(--muted);
+      font-size:.93rem;
+      border-top:1px solid var(--line);
+      background:#fff;
+    }
+
+    .acc-body p{padding-top:14px;margin:0;}
+
+    .highlight{
+      padding:18px 20px;
+      border-radius:12px;
+      background:linear-gradient(135deg,rgba(91,143,191,.08),rgba(59,107,148,.06));
+      border:1px solid rgba(59,107,148,.16);
+      margin-top:16px;
+    }
+
+    .highlight p{color:var(--text);margin:0;font-size:.95rem;}
+
+    .img-box{
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .img-box img{width:100%;height:auto;display:block;}
+
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 14px;border-radius:999px;
+      background:linear-gradient(135deg,var(--accent),var(--primary));
+      color:#fff;font-weight:800;font-size:.9rem;
+      box-shadow:0 6px 18px rgba(59,107,148,.2);
+      margin-bottom:6px;
+    }
+
+    footer{
+      padding:36px 0 52px;
+      text-align:center;
+      color:var(--muted);
+      font-size:.9rem;
+      border-top:1px solid var(--line);
+      margin-top:36px;
+    }
+
+    footer strong{color:var(--primary);}
+
+    /* Comentarios */
+    .comments-section{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+      margin-bottom:28px;
+    }
+
+    .comment-form{
+      margin-bottom:28px;
+      padding-bottom:28px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .form-group{
+      margin-bottom:16px;
+    }
+
+    .form-group label{
+      display:block;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:8px;
+      font-size:.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea{
+      width:100%;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      font-family:'DM Sans',sans-serif;
+      font-size:.9rem;
+      color:var(--text);
+      background:#fff;
+    }
+
+    .form-group textarea{
+      resize:vertical;
+      min-height:100px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus{
+      outline:none;
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(59,107,148,.12);
+    }
+
+    .comment-list{
+      display:flex;flex-direction:column;gap:16px;
+    }
+
+    .comment-item{
+      padding:16px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:10px;
+    }
+
+    .comment-header{
+      display:flex;justify-content:space-between;align-items:flex-start;
+      margin-bottom:8px;
+    }
+
+    .comment-author{
+      font-weight:800;
+      color:var(--text);
+    }
+
+    .comment-date{
+      font-size:.8rem;
+      color:var(--muted);
+    }
+
+    .comment-text{
+      color:var(--text);
+      font-size:.92rem;
+      line-height:1.6;
+    }
+
+    @media(max-width:860px){
+      .grid-two,.grid-equal{grid-template-columns:1fr;}
+      .hero{padding:28px;}
+      section.card{padding:20px;}
+    }
+
+    @media(max-width:640px){
+      .nav-inner{overflow-x:auto;flex-wrap:nowrap;padding-bottom:12px;}
+      .nav-link{flex:0 0 auto;}
+      .container{width:min(100% - 18px,1160px);}
+      .team-grid{grid-template-columns:repeat(2,1fr);}
+      .stats-row{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="container">
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-grain"></div>
+      <div class="hero-content">
+        <div class=>
+         
+        </div>
+        <h1>Blog académico: <em>Depresión</em><br></h1>
+        <p class="subtitle">Blog académico con los productos desarrollados por estudiantes de Tecnología Médica: presentación del equipo, elevator pitch, infografía grupal, panel de discusión, entrevista y reportaje sobre depresión.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav aria-label="Navegación principal">
+  <div class="nav-inner">
+    <a class="nav-link" href="#equipo"><span class="nav-num">1</span>Equipo</a>
+    <a class="nav-link" href="#pitch"><span class="nav-num">2</span>Elevator Pitch</a>
+    <a class="nav-link" href="#infografia"><span class="nav-num">3</span>Infografía</a>
+    <a class="nav-link" href="#panel"><span class="nav-num">4</span>Panel</a>
+    <a class="nav-link" href="#entrevista"><span class="nav-num">5</span>Entrevista</a>
+    <a class="nav-link" href="#reportaje"><span class="nav-num">6</span>Reportaje</a>
+  </div>
+</nav>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main>
+  <div class="container">
+
+    <!-- ─── 1. EQUIPO ─── -->
+    <section class="card" id="equipo">
+      <div class="section-top">
+        <div>
+          <div class="chip">Sección 1</div>
+          <h2>1. Presentación del equipo</h2>
+          <p class="description">Conoce a los integrantes del grupo responsable de este blog académico.</p>
+        </div>
+        <div class="num">1</div>
+      </div>
+
+      <div class="grid-two">
+        <div>
+          <div class="panel">
+            <div class="panel-inner">
+              <h3>Datos del equipo</h3>
+              <ul class="meta-list">
+                <li><strong>Universidad:</strong> César Vallejo</li>
+                <li><strong>Carrera:</strong> Tecnología Médica en Laboratorio Clínico y Anatomía Patológica</li>
+                <li><strong>Semestre:</strong> 2026-I</li>
+              </ul>
+
+              <h3 style="margin-top:20px;">Integrantes</h3>
+              <ul class="meta-list" style="list-style:disc; padding-left:20px;">
+                <li>Abigail Gómez Vásquez</li>
+                <li>Alexis Padilla Riva</li>
+                <li>Ariana Rosalina Rojas Ruiz</li>
+                <li>Bruno Alexander Rodríguez Salinas</li>
+                <li>Jhoselin Vega Correa</li>
+                <li>Josueth Gabriel Abarca Zárate</li>
+                <li>Matías Antonio Ramírez Zapata</li>
+              </ul>
+
+              <h3 style="margin-top:20px;">Intereses</h3>
+              <p style="color:var(--text);margin:10px 0 0;font-size:.95rem;">
+                Informarse sobre la depresión no solo beneficia a quienes la experimentan, sino también a quienes pueden brindar ayuda y acompañamiento oportuno, fortaleciendo así una cultura de comprensión, prevención y cuidado de la salud mental.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel" style="overflow:hidden;">
+            <div class="panel-inner" style="padding:0;">
+              <div style="position:relative;padding-top:56.25%;overflow:hidden;">
+                <iframe src="https://drive.google.com/file/d/9c9d7466-eee6-4d68-9a28-b700af964b38/preview" frameborder="0" loading="lazy" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+              </div>
+              <div style="padding:18px 20px;">
+                <p style="margin:0 0 10px;font-weight:700;color:var(--primary);">Enlace del video</p>
+                <a href="https://youtu.be/6yiBp-2U0C0?si=6hlteUj9suKk-90f" target="_blank" style="color:var(--primary);font-weight:700;word-break:break-all;">https://youtu.be/6yiBp-2U0C0?si=6hlteUj9suKk-90f</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 2. ELEVATOR PITCH ─── -->
+    <section class="card" id="pitch">
+      <div class="section-top">
+        <div>
+          <div class="chip">Sección 2</div>
+          <h2>2. Sinopsis y video del Elevator Pitch</h2>
+        </div>
+        <div class="num">2</div>
+      </div>
+
+      <div class="grid-two">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="video-frame">
+            <img src="https://img.youtube.com/vi/6yiBp-2U0C0/hqdefault.jpg" alt="Elevator Pitch sobre Depresión" />
+            <div class="video-overlay">
+              <div class="video-tag">Pitch</div>
+              <h3>Elevator Pitch - Depresión</h3>
+              <p>Sinopsis y presentación del tema en video corto</p>
+              <a href="https://youtu.be/6yiBp-2U0C0?si=6hlteUj9suKk-90f" target="_blank" class="play-pill">
+                <div class="play"><div class="triangle"></div></div>
+                Ver en YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-inner">
+            <h3>Resumen del tema</h3>
+            <p style="color:var(--text);margin-bottom:16px;font-size:.95rem;">
+              La depresión es una condición de salud mental que afecta a millones de personas en todo el mundo. Se caracteriza por una tristeza persistente, pérdida de interés en actividades que antes resultaban placenteras, falta de energía y dificultades para realizar las actividades cotidianas.
+            </p>
+
+            <div class="note" style="margin-top:0;">
+              Este video presenta el enfoque central del proyecto: visibilizar la depresión y la importancia de buscar apoyo temprano.
+            </div>
+
+            
+      </div>
+    </section>
+
+    <!-- ─── 3. INFOGRAFÍA ─── -->
+    <section class="card" id="infografia">
+      <div class="section-top">
+        <div>
+          <div class="chip">Sección 3</div>
+          <h2>3. Infografía grupal</h2>
+          <p class="description">Infografía elaborada por el equipo para representar visualmente la información del tema investigado.</p>
+        </div>
+        <div class="num">3</div>
+      </div>
+
+      <div class="grid-two">
+        <div class="panel">
+          <div class="panel-inner">
+            <h3>Descripción de la infografía</h3>
+            <p style="color:var(--text);margin-bottom:16px;font-size:.95rem;">
+              La infografía presenta de forma visual y sintética los hallazgos más relevantes sobre la depresión. Combina datos estadísticos, iconografía y mensajes clave para sensibilizar a la población sobre esta problemática social, facilitando la comprensión mediante recursos gráficos atractivos.
+            </p>
+
+            <h3 style="margin-top:16px;">Aspectos cubiertos</h3>
+            <ul class="key-list" style="margin-top:10px;">
+              <li>
+                <div class="key-icon">✓</div>
+                <div><strong>Definición de la depresión</strong></div>
+              </li>
+              <li>
+                <div class="key-icon">✓</div>
+                <div><strong>Principales síntomas</strong> y manifestaciones</div>
+              </li>
+              <li>
+                <div class="key-icon">✓</div>
+                <div><strong>Datos estadísticos</strong> relevantes</div>
+              </li>
+              <li>
+                <div class="key-icon">✓</div>
+                <div><strong>Estrategias de prevención</strong> y autocuidado</div>
+              </li>
+            </ul>
+
+            
+
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;">
+              <span class="tag">Infografía</span>
+              <span class="tag">Educación</span>
+              <span class="tag">Salud mental</span>
+              <span class="tag">Concientización</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel" style="padding:0;overflow:hidden;">
+            <div style="position:relative;padding-top:56.25%;overflow:hidden;">
+              <iframe src="https://drive.google.com/file/d/17xEmnPLhFWVRTUYjBtCS-UFG--NNOqDM/preview" frameborder="0" loading="lazy" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+            </div>
+            <div style="padding:14px;">
+              <a href="https://drive.google.com/file/d/17xEmnPLhFWVRTUYjBtCS-UFG--NNOqDM/view?usp=sharing" target="_blank" class="btn primary" style="width:100%;justify-content:center;">
+                Ver infografía completa
+              </a>
+              <div class="note" style="margin-top:12px;font-size:.86rem;">
+                La infografía está disponible en alta resolución en Google Drive.
+              </div>
+            </div>
+            
+          </div>
+          <h3 style="margin-top:16px;">Propósito</h3>
+            <div class="highlight">
+              <p>
+                <strong>Informar:</strong> Brindar conocimientos sobre depresión. 
+                <strong>Sensibilizar:</strong> Reducir prejuicios. 
+                <strong>Prevenir:</strong> Identificar señales de alerta. 
+                <strong>Orientar:</strong> Motivar búsqueda de apoyo profesional.
+              </p>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 4. PANEL DE DISCUSIÓN ─── -->
+    <section class="card" id="panel">
+      <div class="section-top">
+        <div>
+          <div class="chip">Sección 4</div>
+          <h2>4. Panel de discusión sobre depresión</h2>
+          <p class="description">Análisis profundo del tema con perspectivas de expertos y especialistas.</p>
+        </div>
+        <div class="num">4</div>
+      </div>
+
+      <div class="grid-two">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="video-frame">
+            <img src="https://img.youtube.com/vi/QY_9hAOnOrw/hqdefault.jpg" alt="Panel de discusión" />
+            <div class="video-overlay">
+              <div class="video-tag">Panel</div>
+              <h3>Panel de discusión</h3>
+              <p>Perspectivas sobre depresión y salud mental</p>
+              <a href="https://youtu.be/QY_9hAOnOrw?si=SasC8yTW2XvBmJeQ" target="_blank" class="play-pill">
+                <div class="play"><div class="triangle"></div></div>
+                Ver en YouTube
+              </a>
+            </div>
+          </div>
+          <div class="highlight" style="margin-top:16px;">
+              <p>Se promueve la reflexión sobre la importancia de la salud mental, la detección temprana y el apoyo a las personas que enfrentan esta condición.</p>
+            </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-inner">
+            <h3>Semblanza del panel</h3>
+            <p style="color:var(--text);margin-bottom:16px;font-size:.95rem;">
+              Este panel tiene como propósito brindar información clara y basada en evidencia sobre la depresión, una de las condiciones de salud mental más frecuentes en la actualidad.
+            </p>
+
+            <h3 style="margin-top:16px;">Temas abordados</h3>
+            <ul class="key-list" style="margin-top:10px;">
+              <li>
+                <div class="key-icon">1</div>
+                <div><strong>Causas</strong> biológicas, psicológicas y sociales</div>
+              </li>
+              <li>
+                <div class="key-icon">2</div>
+                <div><strong>Síntomas</strong> y manifestaciones clínicas</div>
+              </li>
+              <li>
+                <div class="key-icon">3</div>
+                <div><strong>Consecuencias</strong> en la calidad de vida</div>
+              </li>
+              <li>
+                <div class="key-icon">4</div>
+                <div><strong>Tratamiento y apoyo</strong> profesional</div>
+              </li>
+            </ul>
+
+            
+
+            <div class="note" style="margin-top:12px;">
+              El panel contribuye a reducir el estigma y fomentar una cultura de comprensión y bienestar emocional.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 5. ENTREVISTA ─── -->
+    <section class="card" id="entrevista">
+      <div class="section-top">
+        <div>
+          <div class="chip">Sección 5</div>
+          <h2>5. Entrevista - Perspectivas sobre la depresión</h2>
+          <p class="description">Video de entrevistas realizadas por el equipo y análisis de testimonios.</p>
+        </div>
+        <div class="num">5</div>
+      </div>
+
+      <div class="grid-equal">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="video-frame">
+            <img src="https://img.youtube.com/vi/h2fzVHedcLI/hqdefault.jpg" alt="Entrevista" />
+            <div class="video-overlay">
+              <div class="video-tag">Entrevista</div>
+              <h3>Testimonios y experiencias</h3>
+              <p>Perspectivas sobre la depresión</p>
+              <a href="https://youtu.be/h2fzVHedcLI?si=UNyBf4mohh9S1sCL" target="_blank" class="play-pill">
+                <div class="play"><div class="triangle"></div></div>
+                Ver en YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="panel">
+            <div class="panel-inner">
+              <h3>Análisis de testimonios</h3>
+              <p style="color:var(--text);margin-bottom:16px;font-size:.95rem;">
+                Se pueden percibir sentimientos profundos de tristeza, soledad, desesperanza y agotamiento emocional. A través de los testimonios, se observa cómo esta condición afecta la vida diaria, las relaciones personales y la forma en que una persona se ve a sí misma.
+              </p>
+
+              <div class="highlight">
+                <p>
+                  <strong>Mensaje clave:</strong> La valentía de quienes comparten sus experiencias transmite un mensaje de comprensión, empatía y esperanza para quienes atraviesan situaciones similares.
+                </p>
+              </div>
+
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;">
+                <span class="tag">Testimonios</span>
+                <span class="tag">Experiencias reales</span>
+                <span class="tag">Empatía</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 6. REPORTAJE ─── -->
+    <section class="card" id="reportaje">
+      <div class="section-top">
+        <div>
+          <div class="chip">Sección 6</div>
+          <h2>6. Reportaje - Universitarios y depresión</h2>
+          <p class="description">Análisis profundo sobre cómo la depresión afecta a estudiantes universitarios.</p>
+        </div>
+        <div class="num">6</div>
+      </div>
+
+      <div class="grid-two">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="video-frame vertical" style="max-width:360px;margin:0 auto;width:100%;">
+            <img src="https://img.youtube.com/vi/IViQ8YrEJDU/hqdefault.jpg" alt="Reportaje universitarios" />
+            <div class="video-overlay">
+              <div class="video-tag">Reportaje</div>
+              <h3>Universitarios y redes sociales</h3>
+              <p>Impacto de la depresión en estudiantes</p>
+              <a href="https://youtu.be/IViQ8YrEJDU?si=_8lK3Sakbt0RhuDk" target="_blank" class="play-pill">
+                <div class="play"><div class="triangle"></div></div>
+                Ver
+              </a>
+            </div>
+          </div>
+          <div class="note" style="margin-top:12px;">
+              Es fundamental reconocer que la depresión es tratable y que buscar ayuda es un acto de fortaleza.
+            </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-inner">
+            <h3>¿Qué es la depresión?</h3>
+            <p style="color:var(--text);margin-bottom:16px;font-size:.95rem;">
+              La depresión es un trastorno de salud mental que va más allá de sentirse triste por un momento. Se caracteriza por una sensación persistente de tristeza, pérdida de interés en actividades que antes generaban satisfacción, cambios en el sueño, el apetito y la energía.
+            </p>
+
+            <h3 style="margin-top:16px;">Diferencia con la tristeza común</h3>
+            <p style="color:var(--text);margin-bottom:16px;font-size:.95rem;">
+              A diferencia de la tristeza común, que suele ser una reacción temporal ante una situación específica y desaparece con el tiempo, la depresión puede durar semanas o meses, interfiriendo en el funcionamiento diario de la persona y requiriendo apoyo profesional para su tratamiento.
+            </p>
+
+            <h3 style="margin-top:16px;">Datos de investigación</h3>
+            <div class="stats-row">
+              <div class="stat-block">
+                <span class="stat-num">45%</span>
+                <span class="stat-label">Tristeza frecuente</span>
+              </div>
+              <div class="stat-block">
+                <span class="stat-num">30%</span>
+                <span class="stat-label">Pérdida de interés</span>
+              </div>
+              <div class="stat-block">
+                <span class="stat-num">15%</span>
+                <span class="stat-label">Problemas de sueño</span>
+              </div>
+              <div class="stat-block">
+                <span class="stat-num">10%</span>
+                <span class="stat-label">Sin síntomas</span>
+              </div>
+            </div>
+
+            <div class="highlight" style="margin-top:16px;">
+              <p><strong>Conclusión:</strong> Estos resultados evidencian la importancia de promover espacios de apoyo emocional y orientación en la comunidad educativa.</p>
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── COMENTARIOS ─── -->
+    <section class="comments-section" id="comentarios">
+      <div class="section-top">
+        <div>
+          <div class="chip">Interacción</div>
+          <h2>Sección de comentarios</h2>
+          <p class="description">Comparte tus reflexiones y perspectivas sobre el tema.</p>
+        </div>
+      </div>
+
+      <div class="comment-form">
+        <h3 style="margin-bottom:16px;">Dejar un comentario</h3>
+        <form id="commentForm">
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Correo (opcional)</label>
+            <input type="email" id="email" name="email">
+          </div>
+          <div class="form-group">
+            <label for="message">Tu comentario</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+          <button type="submit" class="btn primary">Publicar comentario</button>
+        </form>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom:16px;">Comentarios recientes</h3>
+        <div class="comment-list" id="commentList"></div>
+      </div>
+    </section>
+
+  </div><!-- /.container -->
+</main>
+
+<footer>
+  <div class="container">
+    <strong>Blog académico</strong> · Depresión y Salud Mental · Universidad César Vallejo · Carrera de Tecnología Médica
+  </div>
+</footer>
+
+<!-- ══════════════ JS ══════════════ -->
+<script>
+  // Reading progress bar
+  window.addEventListener('scroll', () => {
+    const doc   = document.documentElement;
+    const total = doc.scrollHeight - doc.clientHeight;
+    const pct   = total > 0 ? (window.scrollY / total) * 100 : 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('section.card').forEach(s => observer.observe(s));
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section.card[id]');
+  const navLinks  = document.querySelectorAll('.nav-link');
+
+  const navObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        navLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -40% 0px' });
+
+  sections.forEach(s => navObserver.observe(s));
+
+  // Form de comentarios
+  document.getElementById('commentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const message = document.getElementById('message').value;
+    
+    if (name.trim() && message.trim()) {
+      const today = new Date();
+      const dateStr = today.getDate() + ' de ' + 
+        ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][today.getMonth()] + 
+        ', ' + today.getFullYear();
+      
+      const newComment = `
+        <div class="comment-item">
+          <div class="comment-header">
+            <span class="comment-author">${name}</span>
+            <span class="comment-date">${dateStr}</span>
+          </div>
+          <p class="comment-text">${message}</p>
+        </div>
+      `;
+      
+      document.getElementById('commentList').insertAdjacentHTML('afterbegin', newComment);
+      
+      document.getElementById('commentForm').reset();
+      alert('¡Comentario publicado exitosamente!');
+    }
+  });
+</script>
+<script>
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+</script>
+<script>
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
